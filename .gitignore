@@ -1,1 +1,6 @@
 frontend/.env
+# Environment variables
+.env
+*.env
+.env.*
+!.env.example
