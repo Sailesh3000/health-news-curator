@@ -1,15 +1,12 @@
-import OpenAI from "openai";
+import { InferenceClient } from "@huggingface/inference";
 
-const client = new OpenAI({
-  baseURL: "https://router.huggingface.co/v1",
-  apiKey: import.meta.env.VITE_HF_TOKEN,
-  dangerouslyAllowBrowser: true, // <-- Add this line for testing only
-});
+const client = new InferenceClient(import.meta.env.VITE_HF_TOKEN);
 
 // Summarization Service
 export async function llamaSummarize(text) {
-  const chatCompletion = await client.chat.completions.create({
-    model: "meta-llama/Llama-3-8B-Instruct",
+  const chatCompletion = await client.chatCompletion({
+    provider: "auto",
+    model: "meta-llama/Llama-3.2-1B-Instruct",
     messages: [
       {
         role: "user",
@@ -17,6 +14,7 @@ export async function llamaSummarize(text) {
       },
     ],
   });
+  // Return the string content, not the whole message object
   return chatCompletion.choices[0].message.content;
 }
 
@@ -37,8 +35,9 @@ Article:
 ${text}
 `;
 
-  const response = await client.chat.completions.create({
-    model: "meta-llama/Llama-3-8B-Instruct",
+  const response = await client.chatCompletion({
+    provider: "auto",
+    model: "meta-llama/Llama-3.2-1B-Instruct",
     messages: [
       {
         role: "user",
@@ -47,5 +46,5 @@ ${text}
     ],
   });
 
-  return response.choices?.[0]?.message?.content;
+  return response.choices?.[0]?.message;
 }

@@ -10,7 +10,7 @@ import Card from './components/Card'; // Add this import at the top
 function App() {
   const [currentScreen, setCurrentScreen] = useState(1);
   const [selectedArticle, setSelectedArticle] = useState(null);
-  const { articles } = useContext(NewsContext); // Get articles from context
+  const { articles, setArticles } = useContext(NewsContext); // Get articles from context
 
   const handleNextScreen = () => {
     setCurrentScreen(prev => prev + 1);
@@ -66,6 +66,7 @@ function App() {
         <Home 
           onNext={handleNextScreen}
           articles={articles}
+          setArticles={setArticles}
         />
       )}
       

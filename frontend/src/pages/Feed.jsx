@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import Card from "../components/Card";
 import Badge from "../components/Badge";
 import Button from "../components/Button";
-import { Loader2, Sparkles } from "lucide-react";import { RefreshCw, Clock } from "lucide-react";
-import { useNews } from "../context/NewsContext";
+import { Loader2, Sparkles, RefreshCw, Clock } from "lucide-react";
 
-function Feed({ processedSummaries, onArticleClick }) {
-  const { articles } = useNews();
+function Feed({ articles, processedSummaries, onArticleClick }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
   const articlesPerPage = 2;

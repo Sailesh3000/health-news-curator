@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNews } from "../context/NewsContext";
 import Card from "../components/Card";
 import Badge from "../components/Badge";
 import Button from "../components/Button";
 import { Loader2, Sparkles } from "lucide-react";
 
-function Home({ onNext }) {
-  const { articles, setArticles } = useNews();
+function Home({ onNext, articles, setArticles }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -16,17 +14,16 @@ function Home({ onNext }) {
       try {
         const options = {
           method: "GET",
-          url: "https://live-fitness-and-health-news.p.rapidapi.com/news",
+          url: "https://api.worldnewsapi.com/search-news?language=en&text=covid-19+OR+corona+health",
           headers: {
-            "x-rapidapi-key": import.meta.env.VITE_RAPIDAPI_KEY,
-            "x-rapidapi-host": "live-fitness-and-health-news.p.rapidapi.com",
+            "x-api-key": import.meta.env.VITE_RAPIDAPI_KEY,
+            "Content-Type": "application/json",
           },
         };
         const response = await axios.request(options);
-        setArticles(response.data || []);
+        setArticles(response.data.news || []);
       } catch (error) {
         setArticles([]);
-        // Optionally show error to user
       }
       setLoading(false);
     };
@@ -70,7 +67,7 @@ function Home({ onNext }) {
                 <div className="flex space-x-4">
                   <div className="flex-shrink-0">
                     <img
-                      src={article.media || "https://via.placeholder.com/96x96"}
+                      src={article.media || "https://placehold.co/96x96"}
                       alt={article.title}
                       className="w-24 h-24 object-cover rounded-lg"
                     />

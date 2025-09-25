@@ -3,8 +3,7 @@ import { llamaSummarize } from "../services/aiService";
 import Card from "../components/Card";
 import Badge from "../components/Badge";
 import Button from "../components/Button";
-import { Loader2, Sparkles } from "lucide-react"; // adjust if you use different icons
-import { useNews } from "../context/NewsContext";
+import { Loader2, Sparkles, BookOpen } from "lucide-react"; // <-- Add BookOpen here
 
 function splitSummary(summary) {
   const sentences = summary.split(/(?<=[.?!])\s+/);
@@ -14,8 +13,7 @@ function splitSummary(summary) {
   };
 }
 
-function AiSummary() {
-  const { articles } = useNews();
+function AiSummary({ articles, onNext }) { // <-- Use articles prop only
   const [summaries, setSummaries] = useState({});
   const [processing, setProcessing] = useState(true);
   const [processedCount, setProcessedCount] = useState(0);
