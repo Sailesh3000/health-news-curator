@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Card from "../components/Card";
 import Badge from "../components/Badge";
 import Button from "../components/Button";
-import { Loader2, Sparkles, RefreshCw, Clock } from "lucide-react";
+import { Loader2, Sparkles, RefreshCw, Clock, ExternalLink } from "lucide-react";
 
 function Feed({ articles, processedSummaries, onArticleClick }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,7 +29,7 @@ function Feed({ articles, processedSummaries, onArticleClick }) {
     const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
     if (diffInHours < 1) return "Just now";
     if (diffInHours < 24) return `${diffInHours}h ago`;
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   };
 
   return (
@@ -39,13 +39,15 @@ function Feed({ articles, processedSummaries, onArticleClick }) {
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-900">News Feed</h1>
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               onClick={handleRefresh}
               disabled={refreshing}
               className="flex items-center space-x-2"
             >
-              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw
+                className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
+              />
               <span>Refresh</span>
             </Button>
           </div>
@@ -64,46 +66,62 @@ function Feed({ articles, processedSummaries, onArticleClick }) {
 
         {/* Articles */}
         <div className="space-y-6">
-          {currentArticles.map(article => {
-            const processed = processedSummaries?.[article.id];
+          {currentArticles.map((article) => {
+            const processed = processedSummaries?.[article.uuid];
             return (
-              <Card key={article.id} className="overflow-hidden hover:shadow-lg transition-all cursor-pointer" 
-                    onClick={() => onArticleClick(article)}>
+              <Card
+                key={article.uuid}
+                className="overflow-hidden hover:shadow-lg transition-all cursor-pointer"
+                onClick={() => onArticleClick(article)}
+              >
                 <div className="md:flex">
                   <div className="md:w-1/3">
-                    <img 
-                      src={article.photo_url} 
+                    <img
+                      src={article.image_url || "https://placehold.co/400x300"}
                       alt={article.title}
                       className="w-full h-48 md:h-full object-cover"
                     />
                   </div>
                   <div className="md:w-2/3 p-6">
                     <div className="flex items-center justify-between mb-3">
-                      <Badge variant="info">{article.category}</Badge>
+                      <Badge variant="info">{article.source}</Badge>
                       <span className="text-xs text-gray-500 flex items-center">
                         <Clock size={12} className="mr-1" />
-                        {formatDate(article.published_datetime_utc)}
+                        {formatDate(article.published_at)}
                       </span>
                     </div>
-                    
+
                     <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
                       {article.title}
                     </h2>
 
+                    <p className="text-gray-600 text-sm mb-2">
+                      {article.description}
+                    </p>
+
                     {processed && (
                       <div className="space-y-3">
+                        {/* TL;DR Section */}
                         <div className="bg-blue-50 rounded-lg p-3">
                           <p className="text-sm text-gray-700 font-medium">
                             📝 TL;DR: {processed.tldr}
                           </p>
                         </div>
-                        
+
+                        {/* Key Takeaways Section */}
                         <div>
-                          <h4 className="font-medium text-gray-900 mb-2 text-sm">Key Takeaways:</h4>
+                          <h4 className="font-medium text-gray-900 mb-2 text-sm">
+                            Key Takeaways:
+                          </h4>
                           <ul className="space-y-1">
-                            {processed.takeaways.map((takeaway, idx) => (
-                              <li key={idx} className="flex items-start text-sm text-gray-600">
-                                <span className="text-green-500 mr-2 mt-0.5">•</span>
+                            {processed.takeaways && processed.takeaways.map((takeaway, idx) => (
+                              <li
+                                key={idx}
+                                className="flex items-start text-sm text-gray-600"
+                              >
+                                <span className="text-green-500 mr-2 mt-0.5">
+                                  •
+                                </span>
                                 {takeaway}
                               </li>
                             ))}
@@ -114,11 +132,36 @@ function Feed({ articles, processedSummaries, onArticleClick }) {
 
                     <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
                       <div className="flex items-center text-sm text-gray-500">
-                        <span>{article.source_name}</span>
+                        <span>{article.language?.toUpperCase()}</span>
                       </div>
-                      <Button variant="ghost" size="sm">
-                        Read More →
-                      </Button>
+                      
+                      {/* Fixed buttons section */}
+                      <div className="flex items-center space-x-2">
+                        {/* Read More button - goes to ArticleDetail */}
+                        <Button 
+                          variant="default" 
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent card click
+                            onArticleClick(article);
+                          }}
+                        >
+                          Read More →
+                        </Button>
+                        
+                        {/* External link button - goes to original source */}
+                        <a
+                          href={article.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()} // Prevent card click
+                        >
+                          <Button variant="ghost" size="sm">
+                            <ExternalLink size={14} className="mr-1" />
+                            Original
+                          </Button>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -129,14 +172,14 @@ function Feed({ articles, processedSummaries, onArticleClick }) {
 
         {/* Pagination */}
         <div className="flex items-center justify-between mt-8">
-          <Button 
+          <Button
             variant="outline"
             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
           >
             Previous
           </Button>
-          
+
           <div className="flex items-center space-x-2">
             {[...Array(totalPages)].map((_, idx) => (
               <button
@@ -144,18 +187,20 @@ function Feed({ articles, processedSummaries, onArticleClick }) {
                 onClick={() => setCurrentPage(idx + 1)}
                 className={`w-8 h-8 rounded-full text-sm font-medium transition-colors ${
                   currentPage === idx + 1
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-600 hover:bg-gray-100'
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-600 hover:bg-gray-100"
                 }`}
               >
                 {idx + 1}
               </button>
             ))}
           </div>
-          
-          <Button 
+
+          <Button
             variant="outline"
-            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+            onClick={() =>
+              setCurrentPage(Math.min(totalPages, currentPage + 1))
+            }
             disabled={currentPage === totalPages}
           >
             Next

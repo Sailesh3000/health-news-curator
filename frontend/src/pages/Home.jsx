@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Card from "../components/Card";
 import Badge from "../components/Badge";
 import Button from "../components/Button";
@@ -11,24 +10,41 @@ function Home({ onNext, articles, setArticles }) {
   useEffect(() => {
     const fetchArticles = async () => {
       setLoading(true);
+
+      const requestOptions = {
+        method: "GET",
+      };
+
+      const params = {
+        api_token: import.meta.env.VITE_RAPIDAPI_KEY, // store in .env
+        categories: "health,science,technology",
+        language:"en",
+        limit: "50",
+      };
+
+      const esc = encodeURIComponent;
+      const query = Object.keys(params)
+        .map((k) => esc(k) + "=" + esc(params[k]))
+        .join("&");
+
       try {
-        const options = {
-          method: "GET",
-          url: "https://api.worldnewsapi.com/search-news?language=en&text=covid-19+OR+corona+health",
-          headers: {
-            "x-api-key": import.meta.env.VITE_RAPIDAPI_KEY,
-            "Content-Type": "application/json",
-          },
-        };
-        const response = await axios.request(options);
-        setArticles(response.data.news || []);
+        const response = await fetch(
+          "https://api.thenewsapi.com/v1/news/all?" + query,
+          requestOptions
+        );
+        const result = await response.json();
+        console.log(result);
+
+        setArticles(result.data || []);
       } catch (error) {
+        console.error("error", error);
         setArticles([]);
       }
       setLoading(false);
     };
+
     fetchArticles();
-  }, [setArticles]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
@@ -42,9 +58,11 @@ function Home({ onNext, articles, setArticles }) {
           <div className="space-y-4">
             <div className="text-center mb-8">
               <Loader2 className="animate-spin h-8 w-8 text-blue-600 mx-auto mb-4" />
-              <p className="text-sm text-gray-500">Fetching articles from RSS feeds...</p>
+              <p className="text-sm text-gray-500">
+                Fetching articles from TheNewsAPI...
+              </p>
             </div>
-            {[1, 2, 3, 4].map(i => (
+            {[1, 2, 3, 4].map((i) => (
               <Card key={i} className="p-6 animate-pulse">
                 <div className="flex space-x-4">
                   <div className="w-24 h-16 bg-gray-200 rounded-lg"></div>
@@ -62,25 +80,44 @@ function Home({ onNext, articles, setArticles }) {
             <div className="text-center mb-6">
               <Badge variant="success">✓ {articles.length} articles loaded</Badge>
             </div>
-            {articles.map(article => (
-              <Card key={article.title} className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+            {articles.map((article) => (
+              <Card
+                key={article.uuid}
+                className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+              >
                 <div className="flex space-x-4">
                   <div className="flex-shrink-0">
                     <img
-                      src={article.media || "https://placehold.co/96x96"}
+                      src={article.image_url || "https://placehold.co/96x96"}
                       alt={article.title}
                       className="w-24 h-24 object-cover rounded-lg"
                     />
                   </div>
                   <div className="flex-1">
-                    <h2 className="text-lg font-semibold text-gray-800">{article.title}</h2>
-                    <p className="text-gray-600 text-sm mt-1">{article.description}</p>
+                    <a
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <h2 className="text-lg font-semibold text-blue-800 hover:underline">
+                        {article.title}
+                      </h2>
+                    </a>
+                    <p className="text-gray-600 text-sm mt-1">
+                      {article.description}
+                    </p>
                     <div className="flex flex-wrap gap-2 mt-2">
-                      <Badge variant="outline" className="text-blue-600 border-blue-600">
+                      <Badge
+                        variant="outline"
+                        className="text-blue-600 border-blue-600"
+                      >
                         {article.source}
                       </Badge>
-                      <Badge variant="outline" className="text-gray-600 border-gray-600">
-                        {new Date(article.published_date).toLocaleDateString()}
+                      <Badge
+                        variant="outline"
+                        className="text-gray-600 border-gray-600"
+                      >
+                        {new Date(article.published_at).toLocaleDateString()}
                       </Badge>
                     </div>
                   </div>
