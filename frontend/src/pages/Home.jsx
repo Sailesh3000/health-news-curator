@@ -18,7 +18,7 @@ function Home({ onNext }) {
           method: "GET",
           url: "https://live-fitness-and-health-news.p.rapidapi.com/news",
           headers: {
-            "x-rapidapi-key": "dcad24b8b4mshbac2355e1f3d275p1b457ajsn61428f99ae73",
+            "x-rapidapi-key": import.meta.env.VITE_RAPIDAPI_KEY,
             "x-rapidapi-host": "live-fitness-and-health-news.p.rapidapi.com",
           },
         };
