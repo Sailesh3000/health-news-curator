@@ -17,9 +17,10 @@ function Home({ onNext, articles, setArticles }) {
 
       const params = {
         api_token: import.meta.env.VITE_RAPIDAPI_KEY, // store in .env
-        categories: "health,science,technology",
+        categories: "health",
+        search1: "health",
         language:"en",
-        limit: "50",
+        limit: "150",
       };
 
       const esc = encodeURIComponent;
@@ -130,7 +131,7 @@ function Home({ onNext, articles, setArticles }) {
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300"
               >
                 <Sparkles className="w-5 h-5 inline-block mr-2" />
-                Show More Articles
+                Summarize
               </Button>
             </div>
           </div>
