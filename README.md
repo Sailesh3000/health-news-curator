@@ -47,12 +47,12 @@ You need to have **Node.js** and **npm** installed on your machine.
 
 1.  **Clone the repository:**
     ```sh
-    git clone [https://github.com/your-username/your-repository-name.git](https://github.com/your-username/your-repository-name.git)
+    git clone [https://github.com/Sailesh3000/health-news-curator](https://github.com/Sailesh3000/health-news-curator)
     ```
 
 2.  **Navigate to the project directory:**
     ```sh
-    cd your-repository-name
+    cd health-news-curator
     ```
 
 3.  **Go to the frontend directory:**
