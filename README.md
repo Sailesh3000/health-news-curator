@@ -37,6 +37,12 @@ A web application designed to simplify complex health news, making it accessible
 
 Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
 
+![A screenshot of the Health News Curator application](./frontend/assets/Screenshot%202025-09-27%20124611.png)
+![A screenshot of the Health News Curator application](./frontend/assets/Screenshot%202025-09-27%20124623.png)
+![A screenshot of the Health News Curator application](./frontend/assets/Screenshot%202025-09-27%20124634.png)
+
+
+
 ### Prerequisites
 
 You need to have **Node.js** and **npm** installed on your machine.
