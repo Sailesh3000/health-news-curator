@@ -37,9 +37,6 @@ A web application designed to simplify complex health news, making it accessible
 
 Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
 
-![A screenshot of the Health News Curator application](./frontend/assets/Screenshot%202025-09-27%20124611.png)
-![A screenshot of the Health News Curator application](./frontend/assets/Screenshot%202025-09-27%20124623.png)
-![A screenshot of the Health News Curator application](./frontend/assets/Screenshot%202025-09-27%20124634.png)
 
 
 
@@ -82,11 +79,9 @@ The application should now be running on `http://localhost:5173` (or another por
 
 ## 🖼️ Screenshots
 
-*(Add screenshots of your application here to showcase the UI and features)*
-
-| Feed View                                     | Simplified Article View                       |
-| --------------------------------------------- | --------------------------------------------- |
-| ![Feed View Screenshot](URL_TO_SCREENSHOT_1) | ![Article View Screenshot](URL_TO_SCREENSHOT_2) |
+![A screenshot of the Health News Curator application](./frontend/assets/Screenshot%202025-09-27%20124611.png)
+![A screenshot of the Health News Curator application](./frontend/assets/Screenshot%202025-09-27%20124623.png)
+![A screenshot of the Health News Curator application](./frontend/assets/Screenshot%202025-09-27%20124634.png)
 
 ---
 ## 🧠 AI Model Citation
